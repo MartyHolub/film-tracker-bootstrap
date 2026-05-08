@@ -193,7 +193,7 @@ const formatDuration = (minutes) => {
 };
 
 const formatRating = (rating) =>
-  rating === null || rating === undefined || Number.isNaN(rating) ? "-" : rating.toFixed(1);
+  typeof rating !== "number" || Number.isNaN(rating) ? "-" : rating.toFixed(1);
 
 const getUniqueValues = (key) =>
   Array.from(new Set(state.films.map((film) => film[key]).filter(Boolean))).sort(
@@ -213,6 +213,7 @@ const getFilteredFilms = () => {
   const normalizedName = name.trim().toLowerCase();
 
   const parsedYear = Number(year);
+  const hasYearFilter = year !== "";
 
   let result = state.films.filter((film) => {
     const matchesSearch =
@@ -224,7 +225,7 @@ const getFilteredFilms = () => {
     const matchesName =
       !normalizedName || film.title.toLowerCase().includes(normalizedName);
 
-    const matchesYear = !year || (!Number.isNaN(parsedYear) && film.year === parsedYear);
+    const matchesYear = !hasYearFilter || (!Number.isNaN(parsedYear) && film.year === parsedYear);
 
     const matchesGenre = genre === "all" || film.genre === genre;
 
