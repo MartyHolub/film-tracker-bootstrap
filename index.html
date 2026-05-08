@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="cs" data-bs-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Film Tracker Qt</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="app-body">
+    <div class="window-frame">
+      <header class="window-bar d-flex align-items-center px-3">
+        <div class="traffic-lights">
+          <span class="traffic traffic-red"></span>
+          <span class="traffic traffic-yellow"></span>
+          <span class="traffic traffic-green"></span>
+        </div>
+        <div class="window-title flex-grow-1 text-center">Film Tracker Qt</div>
+        <div class="window-spacer"></div>
+      </header>
+
+      <div class="app-shell d-flex">
+        <aside class="sidebar p-3">
+          <select class="form-select form-select-sm section-select mb-3" aria-label="Sekce">
+            <option selected>Moje filmy</option>
+            <option>Zhlédnuté</option>
+            <option>Oblíbené</option>
+            <option>Watchlist</option>
+          </select>
+
+          <div class="brand d-flex align-items-center gap-2 mb-3">
+            <i class="bi bi-film"></i>
+            <span>Film Tracker</span>
+          </div>
+
+          <div class="sidebar-card mb-4">
+            <div class="sidebar-title">Sekce</div>
+            <nav class="nav nav-pills flex-column gap-2">
+              <a class="nav-link active" href="#">
+                <i class="bi bi-collection"></i>
+                Moje filmy
+              </a>
+              <a class="nav-link" href="#">
+                <i class="bi bi-check2"></i>
+                Zhlédnuté
+              </a>
+              <a class="nav-link" href="#">
+                <i class="bi bi-heart"></i>
+                Oblíbené
+              </a>
+              <a class="nav-link" href="#">
+                <i class="bi bi-bookmark"></i>
+                Watchlist
+              </a>
+            </nav>
+          </div>
+
+          <div class="sidebar-card">
+            <div class="sidebar-title">Akce</div>
+            <div class="d-grid gap-2">
+              <button class="btn btn-secondary" type="button" id="actionAdd">
+                <i class="bi bi-plus-lg"></i>
+                Přidat
+              </button>
+              <button class="btn btn-secondary" type="button" id="actionEdit">
+                <i class="bi bi-pencil"></i>
+                Upravit
+              </button>
+              <button class="btn btn-secondary" type="button" id="actionDelete">
+                <i class="bi bi-trash"></i>
+                Smazat
+              </button>
+              <button class="btn btn-secondary" type="button">
+                <i class="bi bi-info-circle"></i>
+                O autorovi
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <main class="flex-grow-1 main-content">
+          <div class="container-fluid px-4 py-3">
+            <div class="search-bar mb-3">
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input
+                  type="search"
+                  id="globalSearch"
+                  class="form-control"
+                  placeholder="Hledat podle názvu, žánru nebo režiséra"
+                />
+              </div>
+            </div>
+
+            <div class="card qt-card mb-3">
+              <div class="card-header">Filtry</div>
+              <div class="card-body">
+                <div class="row g-3 align-items-center">
+                  <div class="col-12 col-lg-6">
+                    <div class="row g-2 align-items-center">
+                      <label class="col-4 col-md-3 col-form-label" for="filterName">Název:</label>
+                      <div class="col-8 col-md-9">
+                        <input class="form-control" id="filterName" type="text" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6">
+                    <div class="row g-2 align-items-center">
+                      <label class="col-4 col-md-3 col-form-label" for="filterYear">Rok:</label>
+                      <div class="col-8 col-md-9">
+                        <input class="form-control" id="filterYear" type="number" placeholder="např. 2024" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6">
+                    <div class="row g-2 align-items-center">
+                      <label class="col-4 col-md-3 col-form-label" for="filterGenre">Žánr:</label>
+                      <div class="col-8 col-md-9">
+                        <select class="form-select" id="filterGenre"></select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6">
+                    <div class="row g-2 align-items-center">
+                      <label class="col-4 col-md-3 col-form-label" for="filterWatched">Sledováno:</label>
+                      <div class="col-8 col-md-9">
+                        <select class="form-select" id="filterWatched">
+                          <option value="all">Vše</option>
+                          <option value="watched">Ano</option>
+                          <option value="unwatched">Ne</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6">
+                    <div class="row g-2 align-items-center">
+                      <label class="col-4 col-md-3 col-form-label" for="filterLimit">Počet záznamů:</label>
+                      <div class="col-8 col-md-9">
+                        <select class="form-select" id="filterLimit">
+                          <option value="10">10</option>
+                          <option value="25">25</option>
+                          <option value="50">50</option>
+                          <option value="all" selected>Vše</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6">
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-outline-secondary" id="resetFilters" type="button">
+                        Reset filtrů
+                      </button>
+                      <span class="text-secondary small" id="filterSummary"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-12 col-xl-8">
+                <div class="card qt-card">
+                  <div class="card-header">Přehled filmů</div>
+                  <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-0" id="filmTable">
+                      <thead>
+                        <tr>
+                          <th scope="col" data-sort="title">Název</th>
+                          <th scope="col" data-sort="year">Rok</th>
+                          <th scope="col" data-sort="genre">Žánr</th>
+                          <th scope="col" data-sort="rating">Hodnocení</th>
+                          <th scope="col" data-sort="duration">Délka</th>
+                          <th scope="col">Stav</th>
+                        </tr>
+                      </thead>
+                      <tbody id="filmTableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-xl-4">
+                <div class="card qt-card detail-card">
+                  <div class="card-header">Vyberte film</div>
+                  <div class="card-body" id="detailBody">
+                    <div class="detail-placeholder">
+                      <div class="detail-title">Vyberte film</div>
+                      <div class="text-secondary">Rok / Žánr / Režisér</div>
+                      <div class="detail-status">Stav</div>
+                      <div class="detail-box">
+                        Vyberte film v tabulce pro zobrazení detailů.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <div class="d-grid gap-2">
+                      <button class="btn btn-secondary" id="toggleFavorite">
+                        Přepnout oblíbené
+                      </button>
+                      <button class="btn btn-secondary" id="toggleWatchlist">
+                        Přepnout watchlist
+                      </button>
+                      <button class="btn btn-secondary" id="toggleWatched">
+                        Označit jako sledované
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <footer class="status-bar px-3">
+        <span>Celkem filmů: <strong id="statusTotal">0</strong></span>
+        <span class="divider">|</span>
+        <span>Zobrazeno: <strong id="statusVisible">0</strong></span>
+        <span class="divider">|</span>
+        <span>Sledováno: <strong id="statusWatched">0</strong></span>
+        <span class="divider">|</span>
+        <span>Oblíbené: <strong id="statusFavorites">0</strong></span>
+      </footer>
+    </div>
+
+    <div class="modal fade" id="filmModal" tabindex="-1" aria-labelledby="filmModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <form id="filmForm">
+            <div class="modal-header">
+              <h5 class="modal-title" id="filmModalLabel">Přidat film</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row g-3">
+                <div class="col-12 col-md-8">
+                  <label class="form-label" for="filmTitle">Název filmu</label>
+                  <input class="form-control" id="filmTitle" required />
+                </div>
+                <div class="col-6 col-md-4">
+                  <label class="form-label" for="filmYear">Rok</label>
+                  <input class="form-control" id="filmYear" type="number" min="1900" max="2099" required />
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label" for="filmGenre">Žánr</label>
+                  <input class="form-control" id="filmGenre" required />
+                </div>
+                <div class="col-6 col-md-3">
+                  <label class="form-label" for="filmDuration">Délka (min)</label>
+                  <input class="form-control" id="filmDuration" type="number" min="1" required />
+                </div>
+                <div class="col-6 col-md-3">
+                  <label class="form-label" for="filmRating">Hodnocení</label>
+                  <input class="form-control" id="filmRating" type="number" step="0.1" min="0" max="10" required />
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="filmDirector">Režisér</label>
+                  <input class="form-control" id="filmDirector" />
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="filmNotes">Poznámka</label>
+                  <textarea class="form-control" id="filmNotes" rows="3"></textarea>
+                </div>
+                <div class="col-12">
+                  <div class="d-flex flex-wrap gap-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="filmWatched" />
+                      <label class="form-check-label" for="filmWatched">Sledované</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="filmFavorite" />
+                      <label class="form-check-label" for="filmFavorite">Oblíbené</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="filmWatchlist" />
+                      <label class="form-check-label" for="filmWatchlist">Watchlist</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                Zrušit
+              </button>
+              <button type="submit" class="btn btn-secondary">Uložit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
