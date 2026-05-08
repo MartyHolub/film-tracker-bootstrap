@@ -192,7 +192,8 @@ const formatDuration = (minutes) => {
   return hours ? `${hours}h ${remainder}m` : `${remainder}m`;
 };
 
-const formatRating = (rating) => (rating ? rating.toFixed(1) : "-");
+const formatRating = (rating) =>
+  rating === null || rating === undefined ? "-" : rating.toFixed(1);
 
 const getUniqueValues = (key) =>
   Array.from(new Set(state.films.map((film) => film[key]).filter(Boolean))).sort(
@@ -211,6 +212,8 @@ const getFilteredFilms = () => {
   const normalizedSearch = search.trim().toLowerCase();
   const normalizedName = name.trim().toLowerCase();
 
+  const parsedYear = Number(year);
+
   let result = state.films.filter((film) => {
     const matchesSearch =
       !normalizedSearch ||
@@ -221,8 +224,7 @@ const getFilteredFilms = () => {
     const matchesName =
       !normalizedName || film.title.toLowerCase().includes(normalizedName);
 
-    const matchesYear =
-      !year || Number.isNaN(Number(year)) ? true : film.year === Number(year);
+    const matchesYear = !year || Number.isNaN(parsedYear) || film.year === parsedYear;
 
     const matchesGenre = genre === "all" || film.genre === genre;
 
@@ -389,7 +391,7 @@ const submitFilm = (event) => {
       film.id === state.editingId ? { ...film, ...filmData } : film
     );
   } else {
-    const nextId = Math.max(0, ...state.films.map((film) => film.id)) + 1;
+    const nextId = state.films.reduce((maxId, film) => Math.max(maxId, film.id), 0) + 1;
     state.films.unshift({ id: nextId, ...filmData });
   }
 
